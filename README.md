@@ -9,15 +9,22 @@ the money comes from local businesses paying to be featured.
 - **Stack** — Vite + React 19 + TypeScript + zustand, same shape as `vision`.
 - **Map** — Leaflet + OpenStreetMap tiles. No API key, no billing card.
 - **Data** — a static JSON file today, behind a seam that Supabase can slide into later.
-- **Deploy** — Cloudflare Pages or Netlify from a private repo; both run `check-data`
-  before the build.
+- **Deploy** — GitHub Pages on push to `main`, live at
+  <https://davidegt7.github.io/vital-map/>. The workflow runs `check-data` before the
+  build.
 
 ### Hosting
 
-Build command `npm run check-data && npm run build`, output `dist`. Config lives in
-`public/_headers` and `public/_redirects`, which **both** Netlify and Cloudflare Pages
-read — so the host is a dashboard choice, not a code change. `netlify.toml` carries
-only the build step.
+**Today: GitHub Pages, public repo.** Simplest thing that works — no third-party
+signup, and the repo is public anyway.
+
+**When the repo goes private, Pages stops.** GitHub only publishes from private repos
+on a paid plan, so that day the site goes dark and hosting has to move. The move is
+already paid for in advance: `public/_headers` and `public/_redirects` are read by
+**both** Netlify and Cloudflare Pages, and `netlify.toml` carries the build step. The
+only code change needed is dropping `VITE_BASE_PATH` — Pages serves from a
+`/vital-map/` subpath, Netlify and Cloudflare serve from root. Those two files are
+inert on Pages, which is why they can sit there costing nothing until needed.
 
 | | Private repo | Ads allowed | Bandwidth |
 |---|---|---|---|
