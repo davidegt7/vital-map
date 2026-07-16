@@ -1,0 +1,504 @@
+[
+  {
+    "id": "osm_way_550430494",
+    "name": "Aldea Nativa",
+    "category": "grocery",
+    "lat": -33.4294194,
+    "lng": -70.5877191,
+    "address": "Avenida Tobalaba 1799",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "website": "https://www.aldeanativa.cl/",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/way/550430494",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/way/550430494"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_8814894581",
+    "name": "Astro Maní Spa",
+    "category": "market",
+    "lat": -33.4449083,
+    "lng": -70.6482823,
+    "city": "Santiago",
+    "website": "https://www.instagram.com/astromanichile/",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/8814894581",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/8814894581"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_bar_italia",
+    "name": "Bar Italia",
+    "category": "restaurant",
+    "lat": -33.4475967,
+    "lng": -70.6248375,
+    "address": "Avenida Italia 1423",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "pasta sin gluten",
+      "postres sin gluten"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://viajosingluten.com/santiago-de-chile-sin-gluten-por-segunda-vez/",
+        "note": "Descrito por terceros como 100% libre de gluten. Sin comprobar en terreno.",
+        "checkedAt": "2026-07-16"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://viajosingluten.com/santiago-de-chile-sin-gluten-por-segunda-vez/",
+      "https://www.openstreetmap.org/node/1872053860"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_el_rbol",
+    "name": "El Árbol",
+    "category": "restaurant",
+    "lat": -33.4315981,
+    "lng": -70.6228646,
+    "address": "Huelén 74",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "vegetariano",
+      "vegano"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://laurenonlocation.com/healthy-santiago-chile/",
+      "https://www.openstreetmap.org/node/4436288495"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_el_huerto",
+    "name": "El Huerto",
+    "category": "restaurant",
+    "lat": -33.422832,
+    "lng": -70.6124883,
+    "address": "Orrego Luco 054",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "vegetariano",
+      "ensaladas",
+      "jugos"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://laurenonlocation.com/healthy-santiago-chile/",
+      "https://www.openstreetmap.org/node/4348042905"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_10679666165",
+    "name": "Emporio Los Jardines",
+    "category": "market",
+    "lat": -33.4557032,
+    "lng": -70.5883434,
+    "comuna": "Ñuñoa",
+    "city": "Santiago",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/10679666165",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/10679666165"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_10861085154",
+    "name": "Espacio Regenera",
+    "category": "market",
+    "lat": -33.4354051,
+    "lng": -70.5925485,
+    "address": "Avenida Francisco Bilbao 2826",
+    "comuna": "Santiago",
+    "city": "Santiago",
+    "website": "https://espacioregenera.com",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/10861085154",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/10861085154"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_737158484",
+    "name": "Granjero Productos Naturales",
+    "category": "grocery",
+    "lat": -33.4241498,
+    "lng": -70.616107,
+    "address": "La Concepción 167",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/737158484",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/737158484"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_6806294844",
+    "name": "La Finestra",
+    "category": "restaurant",
+    "lat": -33.4553896,
+    "lng": -70.5948224,
+    "address": "Avenida Irarrázaval",
+    "comuna": "Ñuñoa",
+    "city": "Santiago",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/6806294844",
+        "checkedAt": "2026-07-16"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/6806294844"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_way_1117712688",
+    "name": "La Fraternal",
+    "category": "restaurant",
+    "lat": -33.4494418,
+    "lng": -70.5957133,
+    "address": "Avenida Holanda 3362",
+    "comuna": "Ñuñoa",
+    "city": "Santiago",
+    "website": "https://www.lafraternal.cl/",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/way/1117712688",
+        "checkedAt": "2026-07-16"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/way/1117712688"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_6325397641",
+    "name": "Madhu",
+    "category": "grocery",
+    "lat": -33.4369774,
+    "lng": -70.6407978,
+    "city": "Santiago",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/6325397641",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/6325397641"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_6325397639",
+    "name": "Planta Maestra",
+    "category": "grocery",
+    "lat": -33.4369909,
+    "lng": -70.6408549,
+    "city": "Santiago",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/6325397639",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/6325397639"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "osm_node_3865160198",
+    "name": "Punto Saludable",
+    "category": "grocery",
+    "lat": -33.4367804,
+    "lng": -70.645341,
+    "city": "Santiago",
+    "items": [],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://www.openstreetmap.org/node/3865160198",
+        "checkedAt": "2026-07-16"
+      }
+    },
+    "sources": [
+      "https://www.openstreetmap.org/node/3865160198"
+    ],
+    "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_quimey_sushi_fusion_gluten_free",
+    "name": "Quimey Sushi Fusion & Gluten Free",
+    "category": "restaurant",
+    "lat": -33.4300371,
+    "lng": -70.6184677,
+    "address": "Doctor Manuel Barros Borgoño 160",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "sushi sin gluten",
+      "pizza sin gluten",
+      "sándwiches"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://www.quimeysushi.cl/",
+        "note": "Se presenta como el primer sushi 100% gluten free de Chile.",
+        "checkedAt": "2026-07-16"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "caveat": "Hay dos direcciones dando vuelta: Barros Borgoño 160 y Francisco Bilbao 1181. El pin está en la primera. Confirma antes de ir.",
+    "sources": [
+      "https://www.quimeysushi.cl/",
+      "https://www.openstreetmap.org/way/112606954"
+    ],
+    "addedAt": "2026-07-16"
+  }
+]
