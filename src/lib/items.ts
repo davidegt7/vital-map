@@ -34,13 +34,19 @@ export interface ItemDef {
 export const SHOP_CATEGORIES: Category[] = ["grocery", "bakery", "butcher", "market"];
 export const EAT_CATEGORIES: Category[] = ["restaurant", "cafe", "juice"];
 
+/**
+ * Not "para llevar" / "para comer acá" — that's the question the cashier asks
+ * you at the counter, so as a header it reads as a takeaway/eat-in toggle
+ * rather than "what kind of thing are you after". "Productos" carries no such
+ * baggage.
+ */
 export const WORLD_LABELS: Record<"shop" | "eat", { es: string; en: string }> = {
-  shop: { es: "Para llevar", en: "To take home" },
-  eat: { es: "Para comer acá", en: "To eat here" },
+  shop: { es: "Productos", en: "Products" },
+  eat: { es: "Para comer", en: "To eat" },
 };
 
 export const ITEMS: ItemDef[] = [
-  // ---- para llevar ----
+  // ---- productos ----
   { id: "chucrut", label: { es: "Chucrut", en: "Sauerkraut" }, world: "shop", aliases: ["sauerkraut", "fermentados"] },
   { id: "pan", label: { es: "Pan", en: "Bread" }, world: "shop" },
   { id: "masa-madre", label: { es: "Masa madre", en: "Sourdough" }, world: "shop", aliases: ["sourdough"] },
@@ -58,7 +64,7 @@ export const ITEMS: ItemDef[] = [
   { id: "ghee", label: { es: "Ghee y mantequilla", en: "Ghee & butter" }, world: "shop", aliases: ["mantequilla"] },
   { id: "chocolate", label: { es: "Chocolate", en: "Chocolate" }, world: "shop", aliases: ["cacao"] },
 
-  // ---- para comer acá ----
+  // ---- para comer ----
   { id: "desayuno", label: { es: "Desayuno", en: "Breakfast" }, world: "eat", aliases: ["brunch"] },
   { id: "almuerzo", label: { es: "Almuerzo", en: "Lunch" }, world: "eat", aliases: ["menu del dia"] },
   { id: "ensaladas", label: { es: "Ensaladas", en: "Salads" }, world: "eat", aliases: ["ensalada"] },
