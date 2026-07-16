@@ -86,6 +86,8 @@ export function PlaceSheet() {
   const places = useStore((s) => s.places);
   const allReviews = useStore((s) => s.reviews);
   const select = useStore((s) => s.select);
+  const isEditor = useStore((s) => s.isEditor);
+  const setEditing = useStore((s) => s.setEditing);
   const [writing, setWriting] = useState(false);
 
   const place = places.find((p) => p.id === selectedId);
@@ -159,7 +161,14 @@ export function PlaceSheet() {
       )}
 
       <section className="sheet__section">
-        <h3>Lo que sabemos</h3>
+        <h3>
+          Lo que sabemos
+          {isEditor && (
+            <button className="sheet__edit" onClick={() => setEditing(place)}>
+              ✎ Editar
+            </button>
+          )}
+        </h3>
         {DIET_KEYS.map((key) => (
           <ClaimRow key={key} dietKey={key} claim={place.diet[key]} />
         ))}

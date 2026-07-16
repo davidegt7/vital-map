@@ -1,8 +1,10 @@
 import { create } from "zustand";
+import type { Session } from "@supabase/supabase-js";
 import type { Category, DietKey, Place, Review } from "./types";
-import { addReview, loadPlaces, loadReviews } from "./lib/places";
+import { addReview, loadPlaces, loadReviews, savePlace } from "./lib/places";
 import { EMPTY_FILTERS, type DietStrictness, type Filters } from "./lib/filters";
 import { ITEMS, worldsFor } from "./lib/items";
+import { checkIsEditor, getSession, isSupabaseConfigured, onAuthChange } from "./lib/auth";
 
 interface State {
   places: Place[];
@@ -11,6 +13,16 @@ interface State {
   error: string | null;
   filters: Filters;
   selectedId: string | null;
+
+  // --- admin ---
+  /** Admin mode is a URL flag (?admin=1), NOT a secret. It reveals a form; the
+   *  database decides whether anything it produces is allowed to land. */
+  adminMode: boolean;
+  session: Session | null;
+  isEditor: boolean;
+  authReady: boolean;
+  /** The place being edited, or "new". Null when the editor is closed. */
+  editing: Place | "new" | null;
 
   init: () => Promise<void>;
   setDiet: (key: DietKey, value: DietStrictness) => void;
@@ -21,6 +33,10 @@ interface State {
   resetFilters: () => void;
   select: (id: string | null) => void;
   submitReview: (review: Omit<Review, "id" | "createdAt">) => void;
+
+  refreshAuth: () => Promise<void>;
+  setEditing: (p: Place | "new" | null) => void;
+  persistPlace: (p: Place) => Promise<{ error: string | null }>;
 }
 
 export const useStore = create<State>((set, get) => ({
@@ -31,6 +47,12 @@ export const useStore = create<State>((set, get) => ({
   filters: EMPTY_FILTERS,
   selectedId: null,
 
+  adminMode: new URLSearchParams(window.location.search).has("admin"),
+  session: null,
+  isEditor: false,
+  authReady: false,
+  editing: null,
+
   init: async () => {
     if (get().status === "loading" || get().status === "ready") return;
     set({ status: "loading", error: null });
@@ -40,6 +62,35 @@ export const useStore = create<State>((set, get) => ({
     } catch (err) {
       set({ status: "error", error: err instanceof Error ? err.message : String(err) });
     }
+    if (get().adminMode && isSupabaseConfigured()) {
+      await get().refreshAuth();
+      void onAuthChange(() => void get().refreshAuth());
+    } else {
+      set({ authReady: true });
+    }
+  },
+
+  refreshAuth: async () => {
+    const session = await getSession();
+    const isEditor = session ? await checkIsEditor() : false;
+    set({ session, isEditor, authReady: true });
+  },
+
+  setEditing: (editing) => set({ editing }),
+
+  persistPlace: async (place) => {
+    const res = await savePlace(place);
+    if (!res.error) {
+      // Re-read rather than patch in memory: the database applies triggers and
+      // constraints, so what it stored is the truth, not what we sent.
+      try {
+        const places = await loadPlaces();
+        set({ places, editing: null });
+      } catch {
+        set({ editing: null });
+      }
+    }
+    return res;
   },
 
   setDiet: (key, value) =>

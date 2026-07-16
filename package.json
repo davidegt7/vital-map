@@ -12,6 +12,7 @@
     "check-data": "node scripts/check-data.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.7",
     "leaflet": "^1.9.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

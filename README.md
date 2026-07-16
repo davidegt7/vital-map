@@ -117,6 +117,61 @@ Two rules the scripts enforce, because both failures are invisible in a JSON fil
 Where sources genuinely disagree, the record ships a `caveat` and the app shows it
 rather than quietly picking a winner (see Quimey's two addresses).
 
+## Adding places (admin mode)
+
+Open `?admin=1` — e.g. <https://davidegt7.github.io/vital-map/?admin=1>. Sign in with
+a magic link, and you get a form to add places and to flip claims to `verified`.
+
+**The `?admin=1` flag is not a secret and isn't pretending to be one.** It ships in
+the bundle; anyone can type it. It only keeps admin chrome out of a visitor's face.
+The real gate is Postgres: an impostor who finds the flag and signs up gets every
+write rejected by RLS, because their email isn't in `editors`.
+
+That's also why there's no shared "team code". A shared code can't be revoked, can't
+be attributed, and leaks the first time somebody screenshots it — and on a map people
+trust with a coeliac diagnosis, *verified by nobody in particular* is worth nothing.
+Marking a claim verified stamps your email and the date into the claim's own `source`,
+which is then shown to readers.
+
+### One-time setup (David)
+
+Nothing below can be done for you — it needs your Supabase login.
+
+1. **Create a project** at <https://supabase.com/dashboard> (free tier). Use a *new*
+   project, not vision's: `auth.users` is per-project, so sharing would give every
+   vision user an account here.
+2. **Run the schema**: SQL Editor → New query → paste all of [`supabase/schema.sql`](supabase/schema.sql) → Run.
+   It creates the tables, the RLS policies, and adds `david.egt7@gmail.com` as the
+   first editor. Without that row *nobody* can write, including you.
+3. **Seed the 14 places**: `node scripts/seed-sql.mjs > /tmp/seed.sql`, then paste
+   that into the SQL editor and run it. (It generates SQL instead of writing over the
+   network because seeding needs the service key, and that key should never leave the
+   dashboard.)
+4. **Set the keys.** Settings → API gives you the URL and the `anon` key. The anon key
+   ships in client code by design — it is *not* a secret, RLS is what protects the
+   data — so it belongs in a repo **variable**, not a secret:
+   ```bash
+   gh variable set VITE_SUPABASE_URL      -R davidegt7/vital-map -b "https://<ref>.supabase.co"
+   gh variable set VITE_SUPABASE_ANON_KEY -R davidegt7/vital-map -b "<anon-key>"
+   ```
+   For local dev, put the same two in `.env.local`.
+5. **Redeploy** (any push, or Actions → Run workflow).
+
+### Adding a teammate
+
+```sql
+insert into public.editors (email, name) values ('them@example.com', 'Name');
+```
+They open `?admin=1`, sign in with that address, and can write. Remove the row and
+they can't — immediately, no redeploy.
+
+### Without Supabase configured
+
+The app runs fine: `loadPlaces()` falls back to the static `public/data/places.json`,
+and admin mode says it isn't configured. The fallback isn't dead weight — it's also
+what keeps the map up if Supabase is ever down. A slightly stale map beats no map when
+someone is standing on a street corner.
+
 ## Roadmap
 
 - **Verify the seed.** Walk in, ask about oil, set `confidence: 'verified'`. This is

@@ -4,10 +4,12 @@ import { MapView } from "./components/MapView";
 import { FilterBar } from "./components/FilterBar";
 import { PlaceList } from "./components/PlaceList";
 import { PlaceSheet } from "./components/PlaceSheet";
+import { AdminBar } from "./components/AdminBar";
+import { PlaceEditor } from "./components/PlaceEditor";
 import "./App.css";
 
 export default function App() {
-  const { status, error, init, selectedId, select } = useStore();
+  const { status, error, init, selectedId, select, editing } = useStore();
 
   useEffect(() => {
     void init();
@@ -39,6 +41,8 @@ export default function App() {
         </div>
       )}
 
+      <AdminBar />
+
       {status === "ready" && (
         <>
           <FilterBar />
@@ -49,10 +53,17 @@ export default function App() {
         </>
       )}
 
-      {selectedId && (
+      {selectedId && !editing && (
         <>
           <div className="scrim" onClick={() => select(null)} />
           <PlaceSheet />
+        </>
+      )}
+
+      {editing && (
+        <>
+          <div className="scrim" />
+          <PlaceEditor key={editing === "new" ? "new" : editing.id} />
         </>
       )}
     </div>
