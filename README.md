@@ -9,7 +9,22 @@ the money comes from local businesses paying to be featured.
 - **Stack** — Vite + React 19 + TypeScript + zustand, same shape as `vision`.
 - **Map** — Leaflet + OpenStreetMap tiles. No API key, no billing card.
 - **Data** — a static JSON file today, behind a seam that Supabase can slide into later.
-- **Deploy** — GitHub Pages on push to `main`.
+- **Deploy** — Netlify on push to `main`; `netlify.toml` runs `check-data` before the build.
+
+### Why Netlify and not Vercel or Pages
+
+The repo is private, and GitHub Pages only publishes from private repos on a paid
+plan — so Pages is out while the source stays closed.
+
+Vercel's free Hobby plan is out for a different and more permanent reason: it is
+[restricted to non-commercial use](https://vercel.com/docs/limits/fair-use-guidelines),
+and their definition of commercial explicitly includes "the inclusion of
+advertisements". That's this project's entire business model, so Hobby would be a
+terms violation the day the ad slots go live. Netlify's free tier permits commercial
+use, ads included.
+
+Note that a private repo does **not** imply a private site — the deployed site is
+public either way. Only the source is closed.
 
 ```bash
 npm install

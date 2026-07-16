@@ -1,0 +1,35 @@
+[build]
+  command = "npm run check-data && npm run build"
+  publish = "dist"
+
+# No VITE_BASE_PATH here on purpose. GitHub Pages served this from a
+# /vital-map/ subpath; Netlify serves from the domain root, so vite.config.ts's
+# default of "/" is correct and setting it would break every asset URL.
+
+# SPA fallback. Harmless today (there's only one route) but required the moment
+# place detail gets a real URL — a deep link must not 404 on a hard refresh.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    # The service worker must never be cached, or a stale one pins users to an
+    # old build forever and you lose the ability to ship a fix.
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/data/places.json"
+  [headers.values]
+    # Dietary data has to be revalidated, not served stale from a CDN edge.
+    # The service worker is already network-first for this file; this stops the
+    # CDN from undoing that.
+    Cache-Control = "public, max-age=0, must-revalidate"
