@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "../store";
-import { activeFilterCount, allItems, type DietStrictness } from "../lib/filters";
+import { activeFilterCount, itemCounts, type DietStrictness } from "../lib/filters";
+import { ITEMS, WORLD_LABELS, itemsForWorld, worldsFor } from "../lib/items";
 import { CATEGORIES, CATEGORY_LABELS, DIET_KEYS, DIET_LABELS } from "../types";
 
 /** off → some → all → off. One tap deepens, three taps clears. */
@@ -12,23 +13,52 @@ const STRICTNESS_HINT: Record<DietStrictness, string> = {
   all: "100%",
 };
 
-type Menu = "diet" | "category" | null;
+type Menu = "diet" | "category" | "item" | null;
 
 export function FilterBar() {
-  const { filters, setDiet, toggleCategory, setQuery, setVerifiedOnly, resetFilters, places } =
-    useStore();
+  const {
+    filters,
+    setDiet,
+    toggleCategory,
+    toggleItem,
+    setQuery,
+    setVerifiedOnly,
+    resetFilters,
+    places,
+  } = useStore();
   const [open, setOpen] = useState<Menu>(null);
-  const [showItems, setShowItems] = useState(false);
-  const items = useMemo(() => allItems(places).slice(0, 24), [places]);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const count = activeFilterCount(filters);
-  // Verified-only lives in the diet menu, so it has to count toward that menu's
-  // badge — otherwise switching it on collapses the menu and leaves no trace
-  // that a filter is silently narrowing the map.
   const dietCount =
     Object.values(filters.diet).filter((v) => v !== "off").length + (filters.verifiedOnly ? 1 : 0);
   const catCount = filters.categories.length;
+  const itemCount = filters.items.length;
+
+  // Which item worlds to show follows the chosen place types: chucrut is not a
+  // restaurant question, brunch is not a butcher question.
+  const worlds = useMemo(() => worldsFor(filters.categories), [filters.categories]);
+  const counts = useMemo(
+    () => itemCounts(places, filters, ITEMS.map((i) => i.id)),
+    [places, filters],
+  );
+
+  const itemGroups = useMemo(() => {
+    // A `both` item (café) qualifies for every world, so without deduping it
+    // renders twice — and since both chips drive the same filter id, clicking
+    // one lights up the other. Two chips, one state, looks like a bug. First
+    // world wins.
+    const seen = new Set<string>();
+    return worlds.map((world) => {
+      const list = itemsForWorld(world)
+        .filter((i) => !seen.has(i.id))
+        // Real options first: with most of the map untagged, alphabetical would
+        // bury the few that work under a wall of zeros.
+        .sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0));
+      list.forEach((i) => seen.add(i.id));
+      return { world, items: list };
+    });
+  }, [worlds, counts]);
 
   useEffect(() => {
     if (!open) return;
@@ -55,10 +85,7 @@ export function FilterBar() {
           type="search"
           value={filters.query}
           onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => {
-            setShowItems(true);
-            setOpen(null);
-          }}
+          onFocus={() => setOpen(null)}
           placeholder="Buscar lugar, comuna o producto…"
           aria-label="Buscar"
         />
@@ -69,21 +96,18 @@ export function FilterBar() {
         )}
       </div>
 
-      {showItems && items.length > 0 && (
-        <div className="filters__items">
-          {items.map((item) => (
-            <button
-              key={item}
-              className={`chip chip--item ${filters.query === item ? "is-on" : ""}`}
-              onClick={() => setQuery(filters.query === item ? "" : item)}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      )}
-
       <div className="filters__menus">
+        <button
+          className={`menu-btn ${open === "item" ? "is-open" : ""} ${itemCount ? "is-active" : ""}`}
+          onClick={() => toggle("item")}
+          aria-expanded={open === "item"}
+          aria-controls="menu-item"
+        >
+          Qué buscas
+          {itemCount > 0 && <span className="menu-btn__count">{itemCount}</span>}
+          <span className="menu-btn__caret" aria-hidden="true" />
+        </button>
+
         <button
           className={`menu-btn ${open === "diet" ? "is-open" : ""} ${dietCount ? "is-active" : ""}`}
           onClick={() => toggle("diet")}
@@ -106,6 +130,40 @@ export function FilterBar() {
           <span className="menu-btn__caret" aria-hidden="true" />
         </button>
       </div>
+
+      {open === "item" && (
+        <div className="menu-panel menu-panel--scroll" id="menu-item">
+          {itemGroups.map(({ world, items }) => (
+            <div key={world} className="menu-panel__group">
+              {itemGroups.length > 1 && (
+                <h4 className="menu-panel__group-title">{WORLD_LABELS[world].es}</h4>
+              )}
+              <div className="menu-panel__chips">
+                {items.map((item) => {
+                  const n = counts.get(item.id) ?? 0;
+                  const on = filters.items.includes(item.id);
+                  return (
+                    <button
+                      key={item.id}
+                      className={`chip chip--item ${on ? "is-on" : ""} ${n === 0 ? "is-empty" : ""}`}
+                      onClick={() => toggleItem(item.id)}
+                      aria-pressed={on}
+                      title={n === 0 ? "Nadie ha registrado esto todavía" : `${n} lugares`}
+                    >
+                      {item.label.es}
+                      <span className="chip__n">{n}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          <p className="menu-panel__hint">
+            Combínalo con <strong>Características</strong> — pizza + sin gluten.{" "}
+            Los <strong>0</strong> son lo que nadie ha registrado todavía.
+          </p>
+        </div>
+      )}
 
       {open === "diet" && (
         <div className="menu-panel" id="menu-diet">

@@ -1,4 +1,5 @@
 import type { Category, Claim, DietKey, Place } from "../types";
+import { placeHasItem } from "./items";
 
 /**
  * How strict a diet filter is:
@@ -11,6 +12,8 @@ export type DietStrictness = "off" | "some" | "all";
 export interface Filters {
   diet: Record<DietKey, DietStrictness>;
   categories: Category[];
+  /** Item ids from lib/items. OR'd together — see applyFilters. */
+  items: string[];
   query: string;
   /** Only count a claim if someone actually checked it. Off by default — on, it's a much smaller map. */
   verifiedOnly: boolean;
@@ -19,6 +22,7 @@ export interface Filters {
 export const EMPTY_FILTERS: Filters = {
   diet: { glutenFree: "off", seedOilFree: "off", sugarFree: "off", organic: "off" },
   categories: [],
+  items: [],
   query: "",
   verifiedOnly: false,
 };
@@ -53,6 +57,11 @@ export function applyFilters(places: Place[], filters: Filters): Place[] {
     if (filters.categories.length && !filters.categories.includes(place.category)) return false;
     if (!matchesQuery(place, filters.query)) return false;
 
+    // Items are OR'd: picking "café" and "pan" means "either is fine", which is
+    // how people shop. Diet axes are AND'd below, because "gluten free AND sugar
+    // free" means both — a coeliac diabetic is not asking for either/or.
+    if (filters.items.length && !filters.items.some((id) => placeHasItem(place, id))) return false;
+
     // "Solo comprobado" with no diet axis selected still has to mean something,
     // or the checkbox is a lie: it reads as a promise and would silently do
     // nothing. With no axis to scope it to, it means "places where somebody has
@@ -72,16 +81,18 @@ export function applyFilters(places: Place[], filters: Filters): Place[] {
 
 export function activeFilterCount(filters: Filters): number {
   const diet = Object.values(filters.diet).filter((v) => v !== "off").length;
-  return diet + filters.categories.length + (filters.query.trim() ? 1 : 0);
+  return diet + filters.categories.length + filters.items.length + (filters.query.trim() ? 1 : 0);
 }
 
-/** All distinct items across the dataset, for the item-filter suggestions. */
-export function allItems(places: Place[]): string[] {
-  const seen = new Map<string, number>();
-  for (const p of places) {
-    for (const item of p.items) {
-      seen.set(item, (seen.get(item) ?? 0) + 1);
-    }
-  }
-  return [...seen.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([i]) => i);
+/**
+ * How many places each item would yield, given every OTHER active filter.
+ *
+ * Faceted rather than global: if you've already picked "Restaurante", the counts
+ * must describe restaurants, or they promise results the click won't deliver.
+ * Zero is a legitimate and useful answer — it's how a gap in the data becomes
+ * visible instead of just being an empty screen after a hopeful tap.
+ */
+export function itemCounts(places: Place[], filters: Filters, ids: string[]): Map<string, number> {
+  const base = applyFilters(places, { ...filters, items: [] });
+  return new Map(ids.map((id) => [id, base.filter((p) => placeHasItem(p, id)).length]));
 }
