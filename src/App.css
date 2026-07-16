@@ -88,7 +88,6 @@
   white-space: nowrap;
 }
 
-.filters__row,
 .filters__items {
   display: flex;
   gap: 6px;
@@ -98,9 +97,134 @@
   padding-bottom: 2px;
 }
 
-.filters__row::-webkit-scrollbar,
 .filters__items::-webkit-scrollbar {
   display: none;
+}
+
+/* ---------- collapsible filter menus ---------- */
+
+.filters__menus {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.menu-btn.is-open {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* Active state must survive collapse — a closed menu still filtering the map
+   with no visible sign of it is how people conclude the app is broken. */
+.menu-btn.is-active {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.menu-btn__count {
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #06130c;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.menu-btn__caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  opacity: 0.7;
+  transition: transform 0.15s ease;
+}
+
+.menu-btn.is-open .menu-btn__caret {
+  transform: rotate(180deg);
+}
+
+.menu-panel {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  animation: menu-in 0.12s ease-out;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel {
+    animation: none;
+  }
+  .menu-btn__caret {
+    transition: none;
+  }
+}
+
+/* Wrap, don't scroll. The whole point of collapsing was to stop hiding options
+   off the right edge — a scroller inside a panel would just move the problem. */
+.menu-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.menu-panel__hint {
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.menu-panel__hint strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.menu-panel__verified {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.menu-panel__verified input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+
+.menu-panel__verified small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
 }
 
 .chip {
@@ -147,26 +271,6 @@
 
 .chip--static {
   background: var(--surface-2);
-}
-
-.filters__verified {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 10px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.filters__verified input {
-  margin-top: 2px;
-  accent-color: var(--accent);
-}
-
-.filters__verified small {
-  display: block;
-  color: var(--muted);
-  font-size: 11px;
 }
 
 /* ---------- map ---------- */
