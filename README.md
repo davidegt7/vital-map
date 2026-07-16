@@ -9,22 +9,35 @@ the money comes from local businesses paying to be featured.
 - **Stack** — Vite + React 19 + TypeScript + zustand, same shape as `vision`.
 - **Map** — Leaflet + OpenStreetMap tiles. No API key, no billing card.
 - **Data** — a static JSON file today, behind a seam that Supabase can slide into later.
-- **Deploy** — Netlify on push to `main`; `netlify.toml` runs `check-data` before the build.
+- **Deploy** — Cloudflare Pages or Netlify from a private repo; both run `check-data`
+  before the build.
 
-### Why Netlify and not Vercel or Pages
+### Hosting
 
-The repo is private, and GitHub Pages only publishes from private repos on a paid
-plan — so Pages is out while the source stays closed.
+Build command `npm run check-data && npm run build`, output `dist`. Config lives in
+`public/_headers` and `public/_redirects`, which **both** Netlify and Cloudflare Pages
+read — so the host is a dashboard choice, not a code change. `netlify.toml` carries
+only the build step.
 
-Vercel's free Hobby plan is out for a different and more permanent reason: it is
-[restricted to non-commercial use](https://vercel.com/docs/limits/fair-use-guidelines),
-and their definition of commercial explicitly includes "the inclusion of
-advertisements". That's this project's entire business model, so Hobby would be a
-terms violation the day the ad slots go live. Netlify's free tier permits commercial
-use, ads included.
+| | Private repo | Ads allowed | Bandwidth |
+|---|---|---|---|
+| Cloudflare Pages | yes | yes | unlimited (static) |
+| Netlify | yes | yes | 100 GB/mo free |
+| Vercel Hobby | yes | **no** | — |
+| GitHub Pages | paid plans only | yes | 100 GB/mo soft |
+
+**Vercel is disqualified, not merely dispreferred.** The Hobby plan is
+[restricted to non-commercial use](https://vercel.com/docs/limits/fair-use-guidelines)
+and Vercel's definition of commercial explicitly includes "the inclusion of
+advertisements" — this project's entire business model. It would be a terms violation
+the day `AdSlot` stops being a stub, not a problem to solve later.
+
+GitHub Pages only publishes from private repos on a paid plan, which is why hosting
+moved off it when the source closed.
 
 Note that a private repo does **not** imply a private site — the deployed site is
-public either way. Only the source is closed.
+public on every option above. Only the source is closed. Access-controlled Pages is
+GitHub Enterprise Cloud, org-only.
 
 ```bash
 npm install
