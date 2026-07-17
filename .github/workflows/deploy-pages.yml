@@ -32,6 +32,13 @@ jobs:
       - name: Build
         env:
           VITE_BASE_PATH: /vital-map/
+          # Baked into the client at build time. Both are repo *variables*, not
+          # secrets: the publishable/anon key is meant to ship in the browser,
+          # and RLS is what protects the data. Empty when unset → the app falls
+          # back to the static places.json, which is why this was silently fine
+          # until Supabase existed.
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
