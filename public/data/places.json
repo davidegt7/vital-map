@@ -110,6 +110,208 @@
     "addedAt": "2026-07-16"
   },
   {
+    "id": "cur_be_free",
+    "name": "Be Free",
+    "category": "grocery",
+    "lat": -33.4098751,
+    "lng": -70.567896,
+    "address": "Avenida Manquehue Sur 31",
+    "comuna": "Las Condes",
+    "city": "Santiago",
+    "items": [
+      "sin gluten",
+      "suplementos",
+      "granel"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://chilebefree.com/",
+        "note": "Sección de alimentos sin gluten.",
+        "checkedAt": "2026-07-17"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://chilebefree.com/",
+      "https://www.openstreetmap.org/way/25107569"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
+    "id": "cur_biomercado_sin_gluten",
+    "name": "Biomercado Sin Gluten",
+    "category": "grocery",
+    "lat": -33.4252746,
+    "lng": -70.6110436,
+    "address": "Barcelona 2077",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "sin gluten",
+      "productos orgánicos"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://www.biomercado.cl/",
+        "note": "Biomercado especializado sin gluten.",
+        "checkedAt": "2026-07-17"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.biomercado.cl/",
+        "checkedAt": "2026-07-17"
+      }
+    },
+    "sources": [
+      "https://www.biomercado.cl/",
+      "https://www.openstreetmap.org/node/6365408846"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
+    "id": "cur_bonheur_keto_patisserie",
+    "name": "Bonheur Keto Pâtisserie",
+    "category": "bakery",
+    "lat": -33.4174142,
+    "lng": -70.6009653,
+    "address": "Avenida Apoquindo 2730",
+    "comuna": "Las Condes",
+    "city": "Santiago",
+    "items": [
+      "postres",
+      "tortas",
+      "croissants"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://bonheurketopatisserie.com/",
+        "note": "Sin gluten ni conservantes.",
+        "checkedAt": "2026-07-17"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://bonheurketopatisserie.com/",
+        "note": "Sin azúcar.",
+        "checkedAt": "2026-07-17"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "caveat": "Está dentro del mall MUT (Apoquindo 2730), mismo edificio que otras tiendas del mapa.",
+    "sources": [
+      "https://bonheurketopatisserie.com/",
+      "https://www.openstreetmap.org/way/966338859"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
+    "id": "cur_central_organica",
+    "name": "Central Orgánica",
+    "category": "grocery",
+    "lat": -33.4174142,
+    "lng": -70.6009653,
+    "address": "Avenida Apoquindo 2730",
+    "comuna": "Las Condes",
+    "city": "Santiago",
+    "items": [
+      "productos orgánicos"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://www.casafen.cl/listado-productos-organicos-en-santiago-chile/",
+        "checkedAt": "2026-07-17"
+      }
+    },
+    "sources": [
+      "https://www.casafen.cl/listado-productos-organicos-en-santiago-chile/",
+      "https://www.openstreetmap.org/way/966338859"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
+    "id": "cur_ecotienda_pewen",
+    "name": "Ecotienda Pewen",
+    "category": "grocery",
+    "lat": -33.4484152,
+    "lng": -70.6099875,
+    "comuna": "Ñuñoa",
+    "city": "Santiago",
+    "items": [
+      "granel",
+      "productos naturales"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://www.casafen.cl/listado-productos-organicos-en-santiago-chile/",
+      "https://www.openstreetmap.org/node/12030032597"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
     "id": "cur_el_rbol",
     "name": "El Árbol",
     "category": "restaurant",
@@ -183,6 +385,43 @@
       "https://www.openstreetmap.org/node/4348042905"
     ],
     "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_el_naturista",
+    "name": "El Naturista",
+    "category": "restaurant",
+    "lat": -33.4397977,
+    "lng": -70.6515855,
+    "address": "Huérfanos 1046",
+    "comuna": "Santiago",
+    "city": "Santiago",
+    "items": [
+      "vegetariano",
+      "almuerzo"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://www.theclinic.cl/2024/02/16/el-naturista-el-primer-restaurante-vegetariano-de-chile-santiago-centro/",
+      "https://www.openstreetmap.org/way/112503341"
+    ],
+    "addedAt": "2026-07-17"
   },
   {
     "id": "osm_node_10679666165",
@@ -290,6 +529,45 @@
     "addedAt": "2026-07-16"
   },
   {
+    "id": "cur_jo_pasteleria",
+    "name": "Jo Pastelería",
+    "category": "bakery",
+    "lat": -33.4274929,
+    "lng": -70.5900157,
+    "address": "Avenida Tobalaba 1499",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "postres"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "some",
+        "confidence": "claimed",
+        "source": "https://www.lanacion.cl/que-hacer-en-santiago-lugares-donde-probar-postres-sin-azucar/",
+        "note": "Aparece en guías de repostería sin azúcar; alcance sin confirmar en terreno.",
+        "checkedAt": "2026-07-17"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://www.lanacion.cl/que-hacer-en-santiago-lugares-donde-probar-postres-sin-azucar/",
+      "https://www.openstreetmap.org/way/550438337"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
     "id": "osm_node_6806294844",
     "name": "La Finestra",
     "category": "restaurant",
@@ -392,6 +670,49 @@
       "https://www.openstreetmap.org/node/6325397641"
     ],
     "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_pasteleria_mango",
+    "name": "Pastelería Mango",
+    "category": "bakery",
+    "lat": -33.4398245,
+    "lng": -70.6199397,
+    "address": "Diagonal Rancagua 988",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "postres",
+      "tortas sin azúcar"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://pasteleriamango.com/",
+        "note": "Repostería sin gluten.",
+        "checkedAt": "2026-07-17"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "all",
+        "confidence": "claimed",
+        "source": "https://pasteleriamango.com/",
+        "note": "Repostería sin azúcar.",
+        "checkedAt": "2026-07-17"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://pasteleriamango.com/",
+      "https://www.openstreetmap.org/node/2012464139"
+    ],
+    "addedAt": "2026-07-17"
   },
   {
     "id": "osm_node_6325397639",
@@ -500,5 +821,117 @@
       "https://www.openstreetmap.org/way/112606954"
     ],
     "addedAt": "2026-07-16"
+  },
+  {
+    "id": "cur_quinoa",
+    "name": "Quinoa",
+    "category": "cafe",
+    "lat": -33.3951095,
+    "lng": -70.5819659,
+    "address": "Avenida Luis Pasteur",
+    "comuna": "Vitacura",
+    "city": "Santiago",
+    "items": [
+      "bowls",
+      "ensaladas",
+      "vegetariano"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://wanderlog.com/list/geoCategory/95164/best-vegetarian-restaurants-in-santiago",
+      "https://www.openstreetmap.org/way/447273387"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
+    "id": "cur_sapiens_comida_saludable",
+    "name": "Sapiens Comida Saludable",
+    "category": "restaurant",
+    "lat": -33.4456494,
+    "lng": -70.6249073,
+    "address": "Avenida Italia",
+    "comuna": "Providencia",
+    "city": "Santiago",
+    "items": [
+      "vegano",
+      "bowls",
+      "hamburguesas"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://wanderlog.com/list/geoCategory/93379/best-vegan-restaurants-in-santiago",
+      "https://www.openstreetmap.org/node/6325397634"
+    ],
+    "addedAt": "2026-07-17"
+  },
+  {
+    "id": "cur_sin_envase",
+    "name": "Sin Envase",
+    "category": "grocery",
+    "lat": -33.4535635,
+    "lng": -70.6223843,
+    "address": "Avenida Irarrázaval",
+    "comuna": "Ñuñoa",
+    "city": "Santiago",
+    "items": [
+      "granel"
+    ],
+    "diet": {
+      "glutenFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "seedOilFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "sugarFree": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      },
+      "organic": {
+        "scope": "unknown",
+        "confidence": "unverified"
+      }
+    },
+    "sources": [
+      "https://loquemaspuedo.cl/donde-y-como-comprar-a-granel-en-chile/",
+      "https://www.openstreetmap.org/way/187874580"
+    ],
+    "addedAt": "2026-07-17"
   }
 ]
