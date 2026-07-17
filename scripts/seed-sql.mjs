@@ -16,8 +16,32 @@ import { readFile } from "node:fs/promises";
 const raw = await readFile(new URL("../public/data/places.json", import.meta.url), "utf8");
 const places = JSON.parse(raw);
 
-/** Postgres string literal. Doubling single quotes is the escape. */
-const q = (v) => (v === undefined || v === null || v === "" ? "null" : `'${String(v).replace(/'/g, "''")}'`);
+/**
+ * Postgres string literal — emitted as pure ASCII.
+ *
+ * Any accented char (í, á, ñ, …) becomes a Unicode escape inside a U&'…'
+ * literal, e.g. "Astro Maní Spa" → U&'Astro Man\00ed Spa'. Postgres decodes it
+ * back to real UTF-8 on insert, but the SQL text itself carries no byte above
+ * 0x7e — so it survives any clipboard, terminal, or locale that would otherwise
+ * mangle it. (It will: this file gets pasted through macOS pbcopy under a
+ * locale-less shell, which reads UTF-8 as MacRoman and turns "í" into "√≠".)
+ */
+const q = (v) => {
+  if (v === undefined || v === null || v === "") return "null";
+  const s = String(v);
+  if (/^[\x20-\x7e]*$/.test(s)) return `'${s.replace(/'/g, "''")}'`;
+
+  let out = "";
+  for (const ch of s) {
+    const cp = ch.codePointAt(0);
+    if (ch === "'") out += "''";
+    else if (ch === "\\") out += "\\\\"; // backslash is U&'s escape char
+    else if (cp >= 0x20 && cp <= 0x7e) out += ch;
+    else if (cp <= 0xffff) out += "\\" + cp.toString(16).padStart(4, "0");
+    else out += "\\+" + cp.toString(16).padStart(6, "0");
+  }
+  return `U&'${out}'`;
+};
 const arr = (xs) =>
   !xs || xs.length === 0 ? "'{}'" : `array[${xs.map((x) => q(x)).join(",")}]::text[]`;
 
