@@ -155,7 +155,11 @@ Nothing below can be done for you — it needs your Supabase login.
    gh variable set VITE_SUPABASE_ANON_KEY -R davidegt7/vital-map -b "<anon-key>"
    ```
    For local dev, put the same two in `.env.local`.
-5. **Redeploy** (any push, or Actions → Run workflow).
+5. **Allow the magic-link redirect.** Authentication → URL Configuration → add
+   `https://davidegt7.github.io/vital-map/` and `http://localhost:5190/` to **Redirect
+   URLs**. Supabase silently refuses to send a magic link to a URL not on this list —
+   this is the single most common reason "I click Entrar and nothing arrives".
+6. **Redeploy** (any push, or Actions → Run workflow).
 
 ### Adding a teammate
 
