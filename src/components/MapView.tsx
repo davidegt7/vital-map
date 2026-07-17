@@ -3,6 +3,7 @@ import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import { useStore } from "../store";
 import { applyFilters } from "../lib/filters";
+import { useT } from "../lib/useT";
 import { CATEGORY_LABELS, type Place } from "../types";
 
 /** Santiago, roughly Plaza Baquedano. */
@@ -43,10 +44,11 @@ function FlyToSelected() {
 
 function LocateButton() {
   const map = useMap();
+  const { t } = useT();
   return (
     <button
       className="locate"
-      title="Dónde estoy"
+      title={t("map.locate")}
       onClick={() => {
         map.locate({ setView: true, maxZoom: 15 });
       }}
@@ -60,6 +62,7 @@ export function MapView() {
   const places = useStore((s) => s.places);
   const filters = useStore((s) => s.filters);
   const select = useStore((s) => s.select);
+  const { t } = useT();
   const visible = useMemo(() => applyFilters(places, filters), [places, filters]);
 
   return (
@@ -86,8 +89,8 @@ export function MapView() {
       </MapContainer>
 
       <div className="map__count">
-        {visible.length} {visible.length === 1 ? "lugar" : "lugares"}
-        {visible.length !== places.length && ` de ${places.length}`}
+        {visible.length} {visible.length === 1 ? t("map.place") : t("map.places")}
+        {visible.length !== places.length && ` ${t("map.ofTotal", { n: places.length })}`}
       </div>
     </div>
   );

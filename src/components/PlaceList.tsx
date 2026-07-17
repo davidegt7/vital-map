@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useStore } from "../store";
 import { applyFilters } from "../lib/filters";
+import { useT } from "../lib/useT";
 import { ClaimBadge } from "./ClaimBadge";
 import { AdSlot } from "./AdSlot";
 import { CATEGORY_LABELS, DIET_KEYS } from "../types";
@@ -10,19 +11,18 @@ export function PlaceList() {
   const filters = useStore((s) => s.filters);
   const select = useStore((s) => s.select);
   const resetFilters = useStore((s) => s.resetFilters);
+  const { t } = useT();
   const visible = useMemo(() => applyFilters(places, filters), [places, filters]);
 
   if (visible.length === 0) {
     return (
       <div className="list list--empty">
-        <p>Ningún lugar cumple con esto.</p>
+        <p>{t("list.emptyTitle")}</p>
         <p className="list__hint">
-          {filters.verifiedOnly
-            ? "«Solo comprobado» es un filtro duro — casi nada está comprobado todavía. Prueba apagarlo."
-            : "Prueba con menos filtros, o cuéntanos de un lugar que conozcas."}
+          {filters.verifiedOnly ? t("list.emptyVerified") : t("list.emptyHint")}
         </p>
         <button className="btn" onClick={resetFilters}>
-          Limpiar filtros
+          {t("list.clearFilters")}
         </button>
       </div>
     );

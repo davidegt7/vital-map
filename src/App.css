@@ -11,9 +11,39 @@
   padding-top: max(14px, env(safe-area-inset-top));
 }
 
+.app__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .app__head h1 {
   font-size: 24px;
   letter-spacing: -0.02em;
+}
+
+.lang-toggle {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.lang-toggle__btn {
+  padding: 5px 11px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.lang-toggle__btn.is-on {
+  background: var(--accent);
+  color: #06130c;
 }
 
 .app__head h1 span {

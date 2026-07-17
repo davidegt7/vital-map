@@ -5,6 +5,7 @@ import { addReview, loadPlaces, loadReviews, savePlace } from "./lib/places";
 import { EMPTY_FILTERS, type DietStrictness, type Filters } from "./lib/filters";
 import { ITEMS, worldsFor } from "./lib/items";
 import { checkIsEditor, getSession, isSupabaseConfigured, onAuthChange } from "./lib/auth";
+import { initialLang, persistLang, type Lang } from "./lib/i18n";
 
 interface State {
   places: Place[];
@@ -13,6 +14,7 @@ interface State {
   error: string | null;
   filters: Filters;
   selectedId: string | null;
+  lang: Lang;
 
   // --- admin ---
   /** Admin mode is a URL flag (?admin=1), NOT a secret. It reveals a form; the
@@ -32,6 +34,7 @@ interface State {
   setVerifiedOnly: (value: boolean) => void;
   resetFilters: () => void;
   select: (id: string | null) => void;
+  setLang: (lang: Lang) => void;
   submitReview: (review: Omit<Review, "id" | "createdAt">) => void;
 
   refreshAuth: () => Promise<void>;
@@ -46,6 +49,7 @@ export const useStore = create<State>((set, get) => ({
   error: null,
   filters: EMPTY_FILTERS,
   selectedId: null,
+  lang: initialLang(),
 
   adminMode: new URLSearchParams(window.location.search).has("admin"),
   session: null,
@@ -129,6 +133,12 @@ export const useStore = create<State>((set, get) => ({
   setVerifiedOnly: (verifiedOnly) => set((s) => ({ filters: { ...s.filters, verifiedOnly } })),
   resetFilters: () => set({ filters: EMPTY_FILTERS }),
   select: (selectedId) => set({ selectedId }),
+
+  setLang: (lang) => {
+    persistLang(lang);
+    document.documentElement.lang = lang;
+    set({ lang });
+  },
 
   submitReview: (review) => {
     const saved = addReview(review);

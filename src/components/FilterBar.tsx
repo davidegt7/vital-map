@@ -2,16 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "../store";
 import { activeFilterCount, itemCounts, type DietStrictness } from "../lib/filters";
 import { ITEMS, WORLD_LABELS, itemsForWorld, worldsFor } from "../lib/items";
+import { useT } from "../lib/useT";
 import { CATEGORIES, CATEGORY_LABELS, DIET_KEYS, DIET_LABELS } from "../types";
 
 /** off → some → all → off. One tap deepens, three taps clears. */
 const NEXT: Record<DietStrictness, DietStrictness> = { off: "some", some: "all", all: "off" };
-
-const STRICTNESS_HINT: Record<DietStrictness, string> = {
-  off: "",
-  some: "hay opciones",
-  all: "100%",
-};
 
 type Menu = "diet" | "category" | "item" | null;
 
@@ -26,8 +21,15 @@ export function FilterBar() {
     resetFilters,
     places,
   } = useStore();
+  const { t, lang } = useT();
   const [open, setOpen] = useState<Menu>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const strictnessHint: Record<DietStrictness, string> = {
+    off: "",
+    some: t("strictness.some"),
+    all: t("strictness.all"),
+  };
 
   const count = activeFilterCount(filters);
   const dietCount =
@@ -86,12 +88,12 @@ export function FilterBar() {
           value={filters.query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setOpen(null)}
-          placeholder="Buscar lugar, comuna o producto…"
-          aria-label="Buscar"
+          placeholder={t("search.placeholder")}
+          aria-label={t("search.label")}
         />
         {count > 0 && (
           <button className="filters__reset" onClick={resetFilters}>
-            Limpiar ({count})
+            {t("filter.clear", { n: count })}
           </button>
         )}
       </div>
@@ -103,7 +105,7 @@ export function FilterBar() {
           aria-expanded={open === "item"}
           aria-controls="menu-item"
         >
-          Qué buscas
+          {t("menu.item")}
           {itemCount > 0 && <span className="menu-btn__count">{itemCount}</span>}
           <span className="menu-btn__caret" aria-hidden="true" />
         </button>
@@ -114,7 +116,7 @@ export function FilterBar() {
           aria-expanded={open === "diet"}
           aria-controls="menu-diet"
         >
-          Características
+          {t("menu.diet")}
           {dietCount > 0 && <span className="menu-btn__count">{dietCount}</span>}
           <span className="menu-btn__caret" aria-hidden="true" />
         </button>
@@ -125,7 +127,7 @@ export function FilterBar() {
           aria-expanded={open === "category"}
           aria-controls="menu-category"
         >
-          Tipo de lugar
+          {t("menu.category")}
           {catCount > 0 && <span className="menu-btn__count">{catCount}</span>}
           <span className="menu-btn__caret" aria-hidden="true" />
         </button>
@@ -136,7 +138,7 @@ export function FilterBar() {
           {itemGroups.map(({ world, items }) => (
             <div key={world} className="menu-panel__group">
               {itemGroups.length > 1 && (
-                <h4 className="menu-panel__group-title">{WORLD_LABELS[world].es}</h4>
+                <h4 className="menu-panel__group-title">{WORLD_LABELS[world][lang]}</h4>
               )}
               <div className="menu-panel__chips">
                 {items.map((item) => {
@@ -148,9 +150,9 @@ export function FilterBar() {
                       className={`chip chip--item ${on ? "is-on" : ""} ${n === 0 ? "is-empty" : ""}`}
                       onClick={() => toggleItem(item.id)}
                       aria-pressed={on}
-                      title={n === 0 ? "Nadie ha registrado esto todavía" : `${n} lugares`}
+                      title={n === 0 ? t("item.emptyTitle") : t("item.countTitle", { n })}
                     >
-                      {item.label.es}
+                      {item.label[lang]}
                       <span className="chip__n">{n}</span>
                     </button>
                   );
@@ -159,8 +161,8 @@ export function FilterBar() {
             </div>
           ))}
           <p className="menu-panel__hint">
-            Combínalo con <strong>Características</strong> — pizza + sin gluten.{" "}
-            Los <strong>0</strong> son lo que nadie ha registrado todavía.
+            {t("item.hintA")} <strong>{t("menu.diet")}</strong> {t("item.hintB")}{" "}
+            <strong>0</strong> {t("item.hintC")}
           </p>
         </div>
       )}
@@ -177,15 +179,16 @@ export function FilterBar() {
                   onClick={() => setDiet(key, NEXT[value])}
                   aria-pressed={value !== "off"}
                 >
-                  {DIET_LABELS[key].es}
-                  {value !== "off" && <span className="chip__hint">{STRICTNESS_HINT[value]}</span>}
+                  {DIET_LABELS[key][lang]}
+                  {value !== "off" && <span className="chip__hint">{strictnessHint[value]}</span>}
                 </button>
               );
             })}
           </div>
           {/* The tri-state is invisible until you know it's there. Say it once. */}
           <p className="menu-panel__hint">
-            Toca una vez para <strong>hay opciones</strong>, otra vez para <strong>100%</strong>.
+            {t("diet.hintA")} <strong>{t("diet.hintOptions")}</strong>
+            {t("diet.hintB")} <strong>{t("diet.hint100")}</strong>.
           </p>
 
           <label className="menu-panel__verified">
@@ -195,10 +198,8 @@ export function FilterBar() {
               onChange={(e) => setVerifiedOnly(e.target.checked)}
             />
             <span>
-              Solo comprobado
-              <small>
-                Esconde lo que solo dice el local. Mapa mucho más chico, pero confiable.
-              </small>
+              {t("verified.label")}
+              <small>{t("verified.desc")}</small>
             </span>
           </label>
         </div>
@@ -215,7 +216,7 @@ export function FilterBar() {
                 aria-pressed={filters.categories.includes(cat)}
               >
                 <span aria-hidden="true">{CATEGORY_LABELS[cat].icon}</span>{" "}
-                {CATEGORY_LABELS[cat].es}
+                {CATEGORY_LABELS[cat][lang]}
               </button>
             ))}
           </div>

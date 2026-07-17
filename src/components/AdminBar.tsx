@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useStore } from "../store";
 import { isSupabaseConfigured, signInWithEmail, signOut } from "../lib/auth";
+import { useT } from "../lib/useT";
 
 /**
  * The admin strip. Only rendered when ?admin=1 is in the URL.
@@ -18,6 +19,7 @@ import { isSupabaseConfigured, signInWithEmail, signOut } from "../lib/auth";
  */
 export function AdminBar() {
   const { adminMode, session, isEditor, authReady, setEditing, refreshAuth } = useStore();
+  const { t } = useT();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -28,20 +30,20 @@ export function AdminBar() {
   if (!isSupabaseConfigured()) {
     return (
       <div className="admin admin--warn">
-        <strong>Admin sin configurar.</strong> Falta crear el proyecto de Supabase y setear
-        VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY. Ver README.
+        <strong>{t("admin.notConfiguredLead")}</strong> {t("admin.notConfigured")}
       </div>
     );
   }
 
-  if (!authReady) return <div className="admin">Revisando sesión…</div>;
+  if (!authReady) return <div className="admin">{t("admin.checking")}</div>;
 
   if (!session) {
     return (
       <div className="admin">
         {sent ? (
           <p className="admin__msg">
-            Te mandamos un link a <strong>{email}</strong>. Ábrelo en este mismo teléfono.
+            {t("admin.linkSentA")} <strong>{email}</strong>
+            {t("admin.linkSentB")}
           </p>
         ) : (
           <form
@@ -61,11 +63,11 @@ export function AdminBar() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="tu@email.com"
+              placeholder={t("admin.emailPlaceholder")}
               aria-label="Email"
             />
             <button className="btn btn--primary" disabled={busy}>
-              {busy ? "…" : "Entrar"}
+              {busy ? "…" : t("admin.enter")}
             </button>
           </form>
         )}
@@ -78,10 +80,10 @@ export function AdminBar() {
     return (
       <div className="admin admin--warn">
         <span>
-          <strong>{session.user.email}</strong> no está en la lista de editores.
+          <strong>{session.user.email}</strong> {t("admin.notEditor")}
         </span>
         <button className="btn" onClick={async () => { await signOut(); await refreshAuth(); }}>
-          Salir
+          {t("admin.signOut")}
         </button>
       </div>
     );
@@ -91,10 +93,10 @@ export function AdminBar() {
     <div className="admin admin--ok">
       <span className="admin__who">✎ {session.user.email}</span>
       <button className="btn btn--primary" onClick={() => setEditing("new")}>
-        + Agregar lugar
+        {t("admin.addPlace")}
       </button>
       <button className="btn" onClick={async () => { await signOut(); await refreshAuth(); }}>
-        Salir
+        {t("admin.signOut")}
       </button>
     </div>
   );

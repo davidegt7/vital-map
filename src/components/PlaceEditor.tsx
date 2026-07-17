@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useStore } from "../store";
 import { geocode, type GeocodeHit } from "../lib/geocode";
 import { ITEMS } from "../lib/items";
+import { useT } from "../lib/useT";
+import type { StringKey } from "../lib/i18n";
 import {
   CATEGORIES,
   CATEGORY_LABELS,
@@ -14,17 +16,17 @@ import {
   type Place,
 } from "../types";
 
-const SCOPE_LABELS: Record<ClaimScope, string> = {
-  unknown: "Nadie ha comprobado",
-  all: "Todo el local",
-  some: "Hay opciones",
-  none: "No",
+const SCOPE_KEYS: Record<ClaimScope, StringKey> = {
+  unknown: "editor.scopeUnknown",
+  all: "editor.scopeAll",
+  some: "editor.scopeSome",
+  none: "editor.scopeNone",
 };
 
-const CONFIDENCE_LABELS: Record<ClaimConfidence, string> = {
-  unverified: "Sin comprobar",
-  claimed: "Lo dice el local",
-  verified: "Lo comprobé en terreno",
+const CONFIDENCE_KEYS: Record<ClaimConfidence, StringKey> = {
+  unverified: "editor.confUnverified",
+  claimed: "editor.confClaimed",
+  verified: "editor.confVerified",
 };
 
 const blankPlace = (): Place => ({
@@ -58,6 +60,7 @@ export function PlaceEditor() {
   const setEditing = useStore((s) => s.setEditing);
   const persistPlace = useStore((s) => s.persistPlace);
   const session = useStore((s) => s.session);
+  const { t, lang } = useT();
 
   const isNew = editing === "new";
   const [place, setPlace] = useState<Place>(() =>
@@ -82,7 +85,7 @@ export function PlaceEditor() {
     setHits(null);
     try {
       const found = await geocode(q || place.name);
-      if (!found.length) setGeoErr("Sin resultados dentro de Santiago. Prueba con la dirección.");
+      if (!found.length) setGeoErr(t("editor.geoNoResults"));
       setHits(found);
     } catch (err) {
       setGeoErr(err instanceof Error ? err.message : String(err));
@@ -112,9 +115,13 @@ export function PlaceEditor() {
     const today = new Date().toISOString().slice(0, 10);
     const who = session?.user?.email ?? "editor";
     const cur = place.diet[key];
+    // Don't clobber a source the editor typed; only auto-fill an empty one or a
+    // prior auto-stamp. Match both languages' stamp prefixes so switching UI
+    // language mid-edit doesn't double-stamp.
+    const isAutoStamp = /^(Comprobado por|Checked by)\b/.test(cur.source ?? "");
     const autoSource =
-      confidence === "verified" && !cur.source?.startsWith("Comprobado por")
-        ? `Comprobado por ${who}, ${today}`
+      confidence === "verified" && (!cur.source || isAutoStamp)
+        ? t("editor.verifiedBy", { who, date: today })
         : cur.source;
     patchClaim(key, { confidence, source: autoSource, checkedAt: today });
   };
@@ -144,31 +151,31 @@ export function PlaceEditor() {
   };
 
   return (
-    <div className="sheet sheet--editor" role="dialog" aria-label="Editar lugar">
-      <button className="sheet__close" onClick={() => setEditing(null)} aria-label="Cerrar">
+    <div className="sheet sheet--editor" role="dialog" aria-label={t("editor.dialogLabel")}>
+      <button className="sheet__close" onClick={() => setEditing(null)} aria-label={t("common.close")}>
         ✕
       </button>
 
       <header className="sheet__head">
-        <span className="sheet__cat">{isNew ? "Nuevo lugar" : "Editando"}</span>
-        <h2>{place.name || "Sin nombre"}</h2>
+        <span className="sheet__cat">{isNew ? t("editor.new") : t("editor.editing")}</span>
+        <h2>{place.name || t("editor.noName")}</h2>
       </header>
 
       <section className="sheet__section">
-        <h3>Lo básico</h3>
+        <h3>{t("editor.basics")}</h3>
         <label className="field">
-          <span>Nombre</span>
+          <span>{t("editor.name")}</span>
           <input value={place.name} onChange={(e) => patch({ name: e.target.value })} />
         </label>
         <label className="field">
-          <span>Tipo</span>
+          <span>{t("editor.type")}</span>
           <select
             value={place.category}
             onChange={(e) => patch({ category: e.target.value as Place["category"] })}
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
-                {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c].es}
+                {CATEGORY_LABELS[c].icon} {CATEGORY_LABELS[c][lang]}
               </option>
             ))}
           </select>
@@ -176,18 +183,18 @@ export function PlaceEditor() {
       </section>
 
       <section className="sheet__section">
-        <h3>Dónde queda</h3>
+        <h3>{t("editor.where")}</h3>
         {/* No lat/lng inputs, deliberately. A typo'd coordinate looks identical
             to a real one and sends someone to the wrong street. */}
         <div className="geo">
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Dirección o nombre, ej: Orrego Luco 054"
+            placeholder={t("editor.geoPlaceholder")}
             onKeyDown={(e) => e.key === "Enter" && runGeocode()}
           />
           <button className="btn" onClick={runGeocode} disabled={geoBusy || !(q || place.name)}>
-            {geoBusy ? "Buscando…" : "Buscar"}
+            {geoBusy ? t("editor.searching") : t("editor.search")}
           </button>
         </div>
         {geoErr && <p className="field__err">{geoErr}</p>}
@@ -198,7 +205,7 @@ export function PlaceEditor() {
         ))}
         {place.lat !== 0 ? (
           <p className="geo-ok">
-            📍 {place.address ?? "sin calle"}
+            📍 {place.address ?? t("editor.noStreet")}
             {place.comuna && `, ${place.comuna}`}
             <br />
             <small>
@@ -206,15 +213,19 @@ export function PlaceEditor() {
             </small>
           </p>
         ) : (
-          <p className="field__hint">Busca la dirección — las coordenadas no se escriben a mano.</p>
+          <p className="field__hint">{t("editor.geoHint")}</p>
         )}
       </section>
 
       <section className="sheet__section">
-        <h3>Qué encuentras</h3>
+        <h3>{t("sheet.whatYouFind")}</h3>
         <div className="menu-panel__chips">
           {ITEMS.map((item) => {
-            const on = place.items.some((i) => i.toLowerCase() === item.label.es.toLowerCase());
+            // Store items in Spanish regardless of UI language, so the data stays
+            // consistent and placeHasItem's aliases keep matching. The chip label
+            // follows the UI language for readability.
+            const canonical = item.label.es;
+            const on = place.items.some((i) => i.toLowerCase() === canonical.toLowerCase());
             return (
               <button
                 key={item.id}
@@ -222,12 +233,12 @@ export function PlaceEditor() {
                 onClick={() =>
                   patch({
                     items: on
-                      ? place.items.filter((i) => i.toLowerCase() !== item.label.es.toLowerCase())
-                      : [...place.items, item.label.es],
+                      ? place.items.filter((i) => i.toLowerCase() !== canonical.toLowerCase())
+                      : [...place.items, canonical],
                   })
                 }
               >
-                {item.label.es}
+                {item.label[lang]}
               </button>
             );
           })}
@@ -235,20 +246,20 @@ export function PlaceEditor() {
       </section>
 
       <section className="sheet__section">
-        <h3>Lo que sabemos</h3>
+        <h3>{t("sheet.whatWeKnow")}</h3>
         {DIET_KEYS.map((key) => {
           const claim = place.diet[key];
           return (
             <div key={key} className="claim-edit">
-              <strong>{DIET_LABELS[key].es}</strong>
+              <strong>{DIET_LABELS[key][lang]}</strong>
               <div className="claim-edit__row">
                 <select
                   value={claim.scope}
                   onChange={(e) => patchClaim(key, { scope: e.target.value as ClaimScope })}
                 >
-                  {(Object.keys(SCOPE_LABELS) as ClaimScope[]).map((s) => (
+                  {(Object.keys(SCOPE_KEYS) as ClaimScope[]).map((s) => (
                     <option key={s} value={s}>
-                      {SCOPE_LABELS[s]}
+                      {t(SCOPE_KEYS[s])}
                     </option>
                   ))}
                 </select>
@@ -257,9 +268,9 @@ export function PlaceEditor() {
                   onChange={(e) => setConfidence(key, e.target.value as ClaimConfidence)}
                   disabled={claim.scope === "unknown"}
                 >
-                  {(Object.keys(CONFIDENCE_LABELS) as ClaimConfidence[]).map((c) => (
+                  {(Object.keys(CONFIDENCE_KEYS) as ClaimConfidence[]).map((c) => (
                     <option key={c} value={c}>
-                      {CONFIDENCE_LABELS[c]}
+                      {t(CONFIDENCE_KEYS[c])}
                     </option>
                   ))}
                 </select>
@@ -269,7 +280,7 @@ export function PlaceEditor() {
                   className="claim-edit__source"
                   value={claim.source ?? ""}
                   onChange={(e) => patchClaim(key, { source: e.target.value })}
-                  placeholder="Fuente — URL, o «pregunté al dueño»"
+                  placeholder={t("editor.sourcePlaceholder")}
                 />
               )}
               {claim.scope !== "unknown" && (
@@ -277,7 +288,7 @@ export function PlaceEditor() {
                   className="claim-edit__note"
                   value={claim.note ?? ""}
                   onChange={(e) => patchClaim(key, { note: e.target.value })}
-                  placeholder="Detalle: «freidora aparte, mesón compartido»"
+                  placeholder={t("editor.notePlaceholder")}
                 />
               )}
             </div>
@@ -286,9 +297,9 @@ export function PlaceEditor() {
       </section>
 
       <section className="sheet__section">
-        <h3>Fuentes y avisos</h3>
+        <h3>{t("editor.sourcesAndCaveats")}</h3>
         <label className="field">
-          <span>Fuentes (una por línea)</span>
+          <span>{t("editor.sourcesLabel")}</span>
           <textarea
             rows={2}
             value={place.sources.join("\n")}
@@ -299,29 +310,24 @@ export function PlaceEditor() {
           />
         </label>
         <label className="field">
-          <span>Aviso (opcional)</span>
+          <span>{t("editor.caveatLabel")}</span>
           <input
             value={place.caveat ?? ""}
             onChange={(e) => patch({ caveat: e.target.value || undefined })}
-            placeholder="Ej: hay dos direcciones dando vuelta"
+            placeholder={t("editor.caveatPlaceholder")}
           />
         </label>
       </section>
 
       {saveErr && <p className="field__err">{saveErr}</p>}
-      {!canSave && (
-        <p className="field__hint">
-          Falta: nombre, ubicación buscada, al menos una fuente, y una fuente por cada dato que no
-          esté «sin comprobar».
-        </p>
-      )}
+      {!canSave && <p className="field__hint">{t("editor.saveHint")}</p>}
 
       <div className="editor__actions">
         <button className="btn" onClick={() => setEditing(null)}>
-          Cancelar
+          {t("editor.cancel")}
         </button>
         <button className="btn btn--primary" onClick={save} disabled={!canSave || saving}>
-          {saving ? "Guardando…" : "Guardar"}
+          {saving ? t("editor.saving") : t("editor.save")}
         </button>
       </div>
     </div>

@@ -6,10 +6,13 @@ import { PlaceList } from "./components/PlaceList";
 import { PlaceSheet } from "./components/PlaceSheet";
 import { AdminBar } from "./components/AdminBar";
 import { PlaceEditor } from "./components/PlaceEditor";
+import { LangToggle } from "./components/LangToggle";
+import { useT } from "./lib/useT";
 import "./App.css";
 
 export default function App() {
   const { status, error, init, selectedId, select, editing } = useStore();
+  const { t } = useT();
 
   useEffect(() => {
     void init();
@@ -27,16 +30,19 @@ export default function App() {
   return (
     <div className="app">
       <header className="app__head">
-        <h1>
-          Vital<span>Map</span>
-        </h1>
-        <p>Comida real en Santiago. Gratis, siempre.</p>
+        <div className="app__title">
+          <h1>
+            Vital<span>Map</span>
+          </h1>
+          <LangToggle />
+        </div>
+        <p>{t("app.tagline")}</p>
       </header>
 
-      {status === "loading" && <div className="app__state">Cargando lugares…</div>}
+      {status === "loading" && <div className="app__state">{t("app.loading")}</div>}
       {status === "error" && (
         <div className="app__state app__state--error">
-          <p>No se pudieron cargar los lugares.</p>
+          <p>{t("app.loadError")}</p>
           <code>{error}</code>
         </div>
       )}

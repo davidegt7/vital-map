@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../store";
 import { reviewsFor } from "../lib/places";
+import { useT } from "../lib/useT";
 import { ClaimRow } from "./ClaimBadge";
 import { AdSlot } from "./AdSlot";
 import { CATEGORY_LABELS, DIET_KEYS, DIET_LABELS, type DietKey } from "../types";
 
 function ReviewForm({ placeId, onDone }: { placeId: string; onDone: () => void }) {
   const submitReview = useStore((s) => s.submitReview);
+  const { t, lang } = useT();
   const [rating, setRating] = useState(5);
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
@@ -24,7 +26,7 @@ function ReviewForm({ placeId, onDone }: { placeId: string; onDone: () => void }
           placeId,
           rating,
           body: body.trim(),
-          author: author.trim() || "Anónimo",
+          author: author.trim() || t("common.anon"),
           speaksTo,
         });
         onDone();
@@ -37,7 +39,7 @@ function ReviewForm({ placeId, onDone }: { placeId: string; onDone: () => void }
             type="button"
             className={`star ${n <= rating ? "is-on" : ""}`}
             onClick={() => setRating(n)}
-            aria-label={`${n} de 5`}
+            aria-label={t("review.ratingLabel", { n })}
           >
             ★
           </button>
@@ -46,16 +48,16 @@ function ReviewForm({ placeId, onDone }: { placeId: string; onDone: () => void }
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        placeholder="¿Cómo te fue? Sé específico: qué comiste, qué preguntaste, qué te dijeron."
+        placeholder={t("review.bodyPlaceholder")}
         rows={3}
       />
       <input
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
-        placeholder="Tu nombre (opcional)"
+        placeholder={t("review.namePlaceholder")}
       />
       <fieldset className="review-form__speaks">
-        <legend>¿De qué puedes hablar con conocimiento?</legend>
+        <legend>{t("review.speaksLegend")}</legend>
         {DIET_KEYS.map((key) => (
           <label key={key}>
             <input
@@ -67,16 +69,14 @@ function ReviewForm({ placeId, onDone }: { placeId: string; onDone: () => void }
                 )
               }
             />
-            {DIET_LABELS[key].es}
+            {DIET_LABELS[key][lang]}
           </label>
         ))}
       </fieldset>
       <button type="submit" className="btn btn--primary" disabled={!canSubmit}>
-        Publicar reseña
+        {t("review.publish")}
       </button>
-      <p className="review-form__local">
-        Por ahora las reseñas se guardan solo en este teléfono.
-      </p>
+      <p className="review-form__local">{t("review.localNote")}</p>
     </form>
   );
 }
@@ -88,6 +88,7 @@ export function PlaceSheet() {
   const select = useStore((s) => s.select);
   const isEditor = useStore((s) => s.isEditor);
   const setEditing = useStore((s) => s.setEditing);
+  const { t, lang } = useT();
   const [writing, setWriting] = useState(false);
 
   const place = places.find((p) => p.id === selectedId);
@@ -102,13 +103,13 @@ export function PlaceSheet() {
 
   return (
     <div className="sheet" role="dialog" aria-label={place.name}>
-      <button className="sheet__close" onClick={() => select(null)} aria-label="Cerrar">
+      <button className="sheet__close" onClick={() => select(null)} aria-label={t("common.close")}>
         ✕
       </button>
 
       <header className="sheet__head">
         <span className="sheet__cat">
-          {CATEGORY_LABELS[place.category].icon} {CATEGORY_LABELS[place.category].es}
+          {CATEGORY_LABELS[place.category].icon} {CATEGORY_LABELS[place.category][lang]}
         </span>
         <h2>{place.name}</h2>
         {place.address && (
@@ -119,7 +120,7 @@ export function PlaceSheet() {
         )}
         {place.caveat && (
           <p className="sheet__caveat">
-            <strong>Ojo:</strong> {place.caveat}
+            <strong>{t("sheet.caveat")}</strong> {place.caveat}
           </p>
         )}
         <div className="sheet__links">
@@ -128,11 +129,11 @@ export function PlaceSheet() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Cómo llegar
+            {t("sheet.directions")}
           </a>
           {place.website && (
             <a href={place.website} target="_blank" rel="noopener noreferrer">
-              Sitio web
+              {t("sheet.website")}
             </a>
           )}
           {place.instagram && (
@@ -149,7 +150,7 @@ export function PlaceSheet() {
 
       {place.items.length > 0 && (
         <section className="sheet__section">
-          <h3>Qué encuentras</h3>
+          <h3>{t("sheet.whatYouFind")}</h3>
           <div className="sheet__items">
             {place.items.map((item) => (
               <span key={item} className="chip chip--static">
@@ -162,10 +163,10 @@ export function PlaceSheet() {
 
       <section className="sheet__section">
         <h3>
-          Lo que sabemos
+          {t("sheet.whatWeKnow")}
           {isEditor && (
             <button className="sheet__edit" onClick={() => setEditing(place)}>
-              ✎ Editar
+              {t("sheet.edit")}
             </button>
           )}
         </h3>
@@ -173,19 +174,19 @@ export function PlaceSheet() {
           <ClaimRow key={key} dietKey={key} claim={place.diet[key]} />
         ))}
         {unknownCount > 0 && (
-          <p className="sheet__gap-note">
-            {unknownCount} de 4 sin comprobar. Nadie publica si cocina con aceites de semillas —
-            esa respuesta solo la trae alguien que pregunta en el local.
-          </p>
+          <p className="sheet__gap-note">{t("sheet.gapNote", { n: unknownCount })}</p>
         )}
       </section>
 
       <AdSlot where="detail" />
 
       <section className="sheet__section">
-        <h3>Reseñas {reviews.length > 0 && <span className="count">{reviews.length}</span>}</h3>
+        <h3>
+          {t("sheet.reviews")}{" "}
+          {reviews.length > 0 && <span className="count">{reviews.length}</span>}
+        </h3>
         {reviews.length === 0 && !writing && (
-          <p className="sheet__empty">Nadie ha reseñado este lugar todavía.</p>
+          <p className="sheet__empty">{t("sheet.noReviews")}</p>
         )}
         {reviews.map((r) => (
           <article key={r.id} className="review">
@@ -197,7 +198,7 @@ export function PlaceSheet() {
             <p>{r.body}</p>
             {r.speaksTo.length > 0 && (
               <p className="review__speaks">
-                Habla de: {r.speaksTo.map((k) => DIET_LABELS[k].es).join(", ")}
+                {t("sheet.speaksOf")} {r.speaksTo.map((k) => DIET_LABELS[k][lang]).join(", ")}
               </p>
             )}
           </article>
@@ -206,13 +207,13 @@ export function PlaceSheet() {
           <ReviewForm placeId={place.id} onDone={() => setWriting(false)} />
         ) : (
           <button className="btn" onClick={() => setWriting(true)}>
-            Escribir reseña
+            {t("sheet.writeReview")}
           </button>
         )}
       </section>
 
       <footer className="sheet__sources">
-        <h4>Fuentes de esta ficha</h4>
+        <h4>{t("sheet.sources")}</h4>
         <ul>
           {place.sources.map((s) => (
             <li key={s}>
